@@ -1,21 +1,27 @@
+// Workspace.tsx
 "use client";
 
 import React from "react";
-import SideNavigation from "./side-navigation";
-import { Tabs } from "@/components/ui/tabs";
 import VStack from "../Stack/VStack";
 import BreadComponent from "@/components/comp-452";
+import HStack from "../Stack/HStack";
+import NavComponent from "@/components/comp-581";
+import TabComponent from "@/components/comp-436";
 
 type WorkspaceProps = {
-  activeTab: string;
+  currentTab: string;
 };
 
-export default function Workspace({ activeTab }: WorkspaceProps) {
+export default function Workspace({ currentTab }: WorkspaceProps) {
   return (
-    <VStack width="75vw" height="100vh" style={{ padding: "16px" }}>
-      <BreadComponent tab={activeTab} />
-      <div className="h-10 w-10 bg-red-500">test</div>
-      {/* other content */}
+    <VStack width="75vw" height="100%" style={{ padding: "16px", flex: 1 }}>
+      <HStack width="100%" justify="space-between" align="center">
+        <BreadComponent currentTab={currentTab} />
+        <NavComponent />
+      </HStack>
+      <HStack width="100%">
+        <TabComponent />
+      </HStack>
     </VStack>
   );
 }

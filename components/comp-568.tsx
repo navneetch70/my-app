@@ -2,9 +2,8 @@
 
 import { hotkeysCoreFeature, syncDataLoaderFeature } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
-import { FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
-
-import { Tree, TreeItem, TreeItemLabel } from "@/components/tree";
+import { Dock, FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
+import { Tree, TreeItem, TreeItemLabel } from "../app/component/ui/SideNavTree";
 
 interface Item {
   name: string;
@@ -12,30 +11,28 @@ interface Item {
 }
 
 const items: Record<string, Item> = {
-  apis: { name: "APIs" },
-  backend: { children: ["apis", "infrastructure"], name: "Backend" },
+  backend: { name: "Dev Tasks Sprint 2025" },
   company: {
-    children: ["engineering", "marketing", "operations"],
+    children: ["engineering"],
     name: "Company",
   },
   components: { name: "Components" },
   content: { name: "Content" },
   "design-system": {
-    children: ["components", "tokens", "guidelines"],
     name: "Design System",
   },
   engineering: {
     children: ["frontend", "backend", "platform-team"],
-    name: "Engineering",
+    name: "Favourites",
   },
   finance: { name: "Finance" },
-  frontend: { children: ["design-system", "web-platform"], name: "Frontend" },
+  frontend: { name: "Product Roadmap 2026" },
   guidelines: { name: "Guidelines" },
   hr: { name: "HR" },
   infrastructure: { name: "Infrastructure" },
-  marketing: { children: ["content", "seo"], name: "Marketing" },
-  operations: { children: ["hr", "finance"], name: "Operations" },
-  "platform-team": { name: "Platform Team" },
+  marketing: { name: "Marketing" },
+  operations: { name: "Operations" },
+  "platform-team": { name: "Design System Board" },
   seo: { name: "SEO" },
   tokens: { name: "Tokens" },
   "web-platform": { name: "Web Platform" },
@@ -60,17 +57,17 @@ export default function Component() {
   });
 
   return (
-    <div className="flex h-full flex-col gap-2 *:first:grow">
-      <div>
+    <div className="flex w-full flex-col gap-2 *:first:grow">
+      <div className="w-full p-3">
         <Tree
-          className="before:-ms-1 relative before:absolute before:inset-0 before:bg-[repeating-linear-gradient(to_right,transparent_0,transparent_calc(var(--tree-indent)-1px),var(--border)_calc(var(--tree-indent)-1px),var(--border)_calc(var(--tree-indent)))]"
+          className="before:-ms-1 relative before:absolute before:inset-0 bg-black)]"
           indent={indent}
           tree={tree}
         >
           {tree.getItems().map((item) => {
             return (
               <TreeItem item={item} key={item.getId()}>
-                <TreeItemLabel className="before:-inset-y-0.5 before:-z-10 relative before:absolute before:inset-x-0 before:bg-background">
+                <TreeItemLabel className="before:-inset-y-0.5 before:-z-10 relative before:absolute before:inset-x-0 ">
                   <span className="-order-1 flex flex-1 items-center gap-2">
                     {item.isFolder() ? (
                       item.isExpanded() ? (
@@ -79,7 +76,7 @@ export default function Component() {
                         <FolderIcon className="pointer-events-none size-4 text-muted-foreground" />
                       )
                     ) : (
-                      <FileIcon className="pointer-events-none size-4 text-muted-foreground" />
+                      <Dock className="pointer-events-none size-4 text-muted-foreground" />
                     )}
                     {item.getItemName()}
                   </span>
@@ -89,22 +86,6 @@ export default function Component() {
           })}
         </Tree>
       </div>
-
-      <p
-        aria-live="polite"
-        className="mt-2 text-muted-foreground text-xs"
-        role="region"
-      >
-        Basic tree with caret icon on the right ∙{" "}
-        <a
-          className="underline hover:text-foreground"
-          href="https://headless-tree.lukasbach.com"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          API
-        </a>
-      </p>
     </div>
   );
 }

@@ -19,7 +19,7 @@ const colors = {
   900: "#1a1d18",
 };
 
-export default function MinimalHero() {
+export default function Page() {
   const gradientRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

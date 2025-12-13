@@ -1,3 +1,4 @@
+// comp-452 (BreadComponent).tsx
 import { HomeIcon } from "lucide-react";
 import {
   Breadcrumb,
@@ -7,21 +8,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
-const BREADCRUMB_TITLES = {
-  "tab-1": "Overview",
-  "tab-2": "Projects",
-  "tab-3": "Packages",
-} as const;
-
-type TabKey = keyof typeof BREADCRUMB_TITLES;
+import { SIDE_NAV_LABELS } from "../app/component/side-nav-config"; // adjust path
 
 type BreadComponentProps = {
-  tab: string; // or TabKey if you want to be strict
+  currentTab: string;
 };
 
-export default function BreadComponent({ tab }: BreadComponentProps) {
-  const title = BREADCRUMB_TITLES[tab as TabKey] ?? "Overview";
+export default function BreadComponent({ currentTab }: BreadComponentProps) {
+  const label = SIDE_NAV_LABELS[currentTab] ?? "Home";
 
   return (
     <Breadcrumb>
@@ -29,14 +23,12 @@ export default function BreadComponent({ tab }: BreadComponentProps) {
         <BreadcrumbItem>
           <BreadcrumbLink href="#">
             <HomeIcon aria-hidden="true" size={16} />
-            <span className="sr-only">Home</span>
+            <span className="sr-only">Workspace</span>
           </BreadcrumbLink>
         </BreadcrumbItem>
-
         <BreadcrumbSeparator />
-
         <BreadcrumbItem>
-          <BreadcrumbPage>{title}</BreadcrumbPage>
+          <BreadcrumbPage>{label}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

@@ -59,16 +59,17 @@ export default function SignInPage() {
           left: 100%;
         }
       `}</style>
+      {/* url('https://cdn.midjourney.com/299f94f9-ecb9-4b26-bead-010b8d8b01d9/0_0.webp?w=800&q=80') */}
       <div className="z-10 w-full max-w-6xl">
-        <div className="bg-[#1a191a] overflow-hidden rounded-[40px] shadow-2xl">
-          <div className="grid min-h-[700px] lg:grid-cols-2">
+        <div className="border backdrop-blur-md overflow-hidden rounded-[40px] shadow-2xl">
+          <div className="grid min-h-[500px] lg:grid-cols-2">
             {/* Left Side */}
-            <div className="brand-side relative m-4 rounded-3xl bg-[url('https://cdn.midjourney.com/299f94f9-ecb9-4b26-bead-010b8d8b01d9/0_0.webp?w=800&q=80')] bg-cover p-12 text-white">
+            <div className="brand-side shadow-[inset_-5px_-1px_20px_0_rgba(255,255,255,0.2)] relative m-4 rounded-3xl bg-[] bg-cover p-12 text-white">
               <div>
                 <div className="mb-12 text-lg font-semibold uppercase">
                   PixelForge Studio
                 </div>
-                <h1 className="mb-4 text-6xl font-medium">
+                <h1 className="mb-2 text-6xl font-medium">
                   Create, Design, and Innovate
                 </h1>
                 <p className="mb-12 text-xl opacity-80">
