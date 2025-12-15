@@ -6,22 +6,25 @@ import VStack from "../Stack/VStack";
 import BreadComponent from "@/components/comp-452";
 import HStack from "../Stack/HStack";
 import NavComponent from "@/components/comp-581";
-import TabComponent from "@/components/comp-436";
 
 type WorkspaceProps = {
-  currentTab: string;
+  currentLabel: string;
+  activeWorkspaceId?: string | null;
+  children: React.ReactNode;
 };
 
-export default function Workspace({ currentTab }: WorkspaceProps) {
+
+export default function Workspace({ currentLabel, children }: WorkspaceProps) {
   return (
     <VStack width="75vw" height="100%" style={{ padding: "16px", flex: 1 }}>
       <HStack width="100%" justify="space-between" align="center">
-        <BreadComponent currentTab={currentTab} />
+        <BreadComponent label={currentLabel} />
         <NavComponent />
       </HStack>
-      <HStack width="100%">
-        <TabComponent />
-      </HStack>
+
+      <VStack width="100%" className="mt-4">
+        {children}
+      </VStack>
     </VStack>
   );
 }

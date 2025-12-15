@@ -8,14 +8,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { SIDE_NAV_LABELS } from "../app/component/side-nav-config"; // adjust path
 
 type BreadComponentProps = {
-  currentTab: string;
+  label: string;
 };
 
-export default function BreadComponent({ currentTab }: BreadComponentProps) {
-  const label = SIDE_NAV_LABELS[currentTab] ?? "Home";
+
+export default function BreadComponent({ label }: BreadComponentProps) {
 
   return (
     <Breadcrumb>

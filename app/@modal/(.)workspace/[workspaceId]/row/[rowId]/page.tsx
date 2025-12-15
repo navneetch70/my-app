@@ -1,4 +1,4 @@
-// app/home/components/FeedbackSidebar.tsx
+// app/@modal/(.)workspace/[workspaceId]/row/[rowId]/page.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -19,19 +19,21 @@ import VStack from "@/app/Stack/VStack";
 import HStack from "@/app/Stack/HStack";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/rightTab";
+import { Tabs } from "@/components/ui/tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TextAreaComponent from "@/components/comp-59";
 import AvatarComponent from "@/components/comp-390";
-import TextEditComponent from "./TextEditiable";
+import TextEditComponent from "@/app/components/TextEditiable";
 
-export default function FeedbackSidebar({ id }: { id: string }) {
+export default function FeedbackSidebar({
+  params,
+}: {
+  params: {
+    workspaceId: string;
+    rowId: string;
+  };
+}) {
   const router = useRouter();
-
   const close = () => router.back();
 
   return (

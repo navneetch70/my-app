@@ -124,7 +124,7 @@ export default function NavBarMainComponent() {
               {navigationLinks.map((link) => {
                 const Icon = link.icon;
                 return (
-                  <NavigationMenuItem key={link.label}>
+                  <NavigationMenuItem key={link.href}>
                     <NavigationMenuLink
                       active={link.active}
                       className="flex-row items-center gap-2 py-1.5 font-medium text-foreground hover:text-primary"

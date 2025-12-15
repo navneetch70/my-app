@@ -25,7 +25,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/TablePopup";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Item = {
   id: string;
@@ -40,6 +40,7 @@ type Item = {
 const STATUS_OPTIONS: Item["status"][] = ["Active", "Pending", "Inactive"];
 
 export default function TableComponent() {
+  const { workspaceId } = useParams<{ workspaceId: string }>();
   const [data, setData] = useState<Item[]>([]);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function TableComponent() {
         "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/users-01_fertyx.json"
       );
       const data = await res.json();
-      setData(data.slice(0, 5)); // Limit to 5 items
+      setData(data.slice(0, 7)); // Limit to 5 items
     }
     fetchPosts();
   }, []);
@@ -224,11 +225,11 @@ export default function TableComponent() {
               <TableRow
                 data-state={row.getIsSelected() && "selected"}
                 key={row.id}
-                onClick={() =>
-                  router.push(`/home/feedback/${row.id}`, {
-                    scroll: false,
-                  })
-                }
+                onClick={()=> router.push(
+  `/workspace/${workspaceId}/row/${row.id}`,
+  { scroll: false }
+)
+}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

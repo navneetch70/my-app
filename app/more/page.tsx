@@ -1,7 +1,7 @@
 import BackgroundEffects from "../components/background/BackgroundEffects";
 import AppLayout from "../components/AppLayout";
 
-export default function HomePage() {
+export default function MorePage() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#1a1d18] via-black to-[#2a2e26] text-[#e6e1d7]">
       <BackgroundEffects />
@@ -10,7 +10,7 @@ export default function HomePage() {
         <AppLayout>
           {/* 👉 Right-side content for My Work */}
           <div className="text-white">
-            <h2 className="text-lg font-semibold">My Home</h2>
+            <h2 className="text-lg font-semibold">My More</h2>
             <p>Tasks, assignments, and progress will appear here.</p>
           </div>
         </AppLayout>

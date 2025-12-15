@@ -57,8 +57,8 @@ export default function Component() {
   });
 
   return (
-    <div className="flex w-full flex-col gap-2 *:first:grow">
-      <div className="w-full pt-4 px-4">
+    <div style={{width:"100%"}} className="flex w-full flex-col gap-2 *:first:grow">
+      <div style={{width:"100%"}}  className="w-full pt-4 px-4">
         <Tree
           className="before:-ms-1 relative before:absolute before:inset-0 bg-black)]"
           indent={indent}
