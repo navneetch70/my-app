@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { theme } from "@/app/theme/theme";
 
 export default function UserMenu() {
   return (
@@ -25,60 +26,103 @@ export default function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="
-    h-auto p-0 
-    bg-transparent 
-    hover:bg-white/10 
-    rounded-full
-    curson-pointer
-  "
+          className="h-auto p-0 rounded-full"
+          style={{
+            backgroundColor: "transparent",
+            color: theme.icon.primary,
+          }}
         >
-          <Avatar className="border border-white bg-transparent rounded-full">
-            <AvatarImage alt="Profile image" src="/origin/avatar.jpg" />
-            <AvatarFallback className="text-white bg-transparent">
+          <Avatar
+            className="rounded-full"
+            style={{
+              border: `1px solid ${theme.border.default}`,
+              backgroundColor: theme.surface.card,
+            }}
+          >
+            <AvatarImage alt="Profile image" src="" />
+            <AvatarFallback
+              style={{
+                color: theme.text.primary,
+                backgroundColor: theme.surface.card,
+              }}
+            >
               KK
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="max-w-64 bg-zinc-800">
+
+      <DropdownMenuContent
+        align="end"
+        className="max-w-64"
+        style={{
+          backgroundColor: theme.surface.modal,
+          border: `1px solid ${theme.border.default}`,
+          color: theme.text.primary,
+        }}
+      >
         <DropdownMenuLabel className="flex min-w-0 flex-col">
-          <span className="truncate font-medium text-foreground text-sm">
+          <span
+            className="truncate text-sm font-medium"
+            style={{ color: theme.text.primary }}
+          >
             Keith Kennedy
           </span>
-          <span className="truncate font-normal text-muted-foreground text-xs">
+          <span
+            className="truncate text-xs"
+            style={{ color: theme.text.muted }}
+          >
             k.kennedy@coss.com
           </span>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+
+        <DropdownMenuSeparator
+          style={{ backgroundColor: theme.border.subtle }}
+        />
+
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BoltIcon aria-hidden="true" className="opacity-60" size={16} />
+          <DropdownMenuItem style={{ color: theme.text.secondary }}>
+            <BoltIcon size={16} style={{ opacity: 0.6 }} />
             <span>Option 1</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Layers2Icon aria-hidden="true" className="opacity-60" size={16} />
+
+          <DropdownMenuItem style={{ color: theme.text.secondary }}>
+            <Layers2Icon size={16} style={{ opacity: 0.6 }} />
             <span>Option 2</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BookOpenIcon aria-hidden="true" className="opacity-60" size={16} />
+
+          <DropdownMenuItem style={{ color: theme.text.secondary }}>
+            <BookOpenIcon size={16} style={{ opacity: 0.6 }} />
             <span>Option 3</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+
+        <DropdownMenuSeparator
+          style={{ backgroundColor: theme.border.subtle }}
+        />
+
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <PinIcon aria-hidden="true" className="opacity-60" size={16} />
+          <DropdownMenuItem style={{ color: theme.text.secondary }}>
+            <PinIcon size={16} style={{ opacity: 0.6 }} />
             <span>Option 4</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <UserPenIcon aria-hidden="true" className="opacity-60" size={16} />
+
+          <DropdownMenuItem style={{ color: theme.text.secondary }}>
+            <UserPenIcon size={16} style={{ opacity: 0.6 }} />
             <span>Option 5</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <LogOutIcon aria-hidden="true" className="opacity-60" size={16} />
+
+        <DropdownMenuSeparator
+          style={{ backgroundColor: theme.border.subtle }}
+        />
+
+        <DropdownMenuItem
+          style={{
+            color: theme.text.primary,
+          }}
+        >
+          <LogOutIcon size={16} style={{ opacity: 0.6 }} />
           <span>Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -26,7 +26,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/TablePopup";
 import { useParams, useRouter } from "next/navigation";
-
+import { theme } from "@/app/theme/theme";
 type Item = {
   id: string;
   name: string;
@@ -39,17 +39,44 @@ type Item = {
 
 const STATUS_OPTIONS: Item["status"][] = ["Active", "Pending", "Inactive"];
 
+const STATUS_STYLE: Record<
+  Item["status"],
+  { bg: string; text: string; border: string }
+> = {
+  Active: {
+    // Green (success)
+    bg: "rgba(46, 125, 50, 0.12)",
+    text: "#2e7d32",
+    border: "rgba(46, 125, 50, 0.35)",
+  },
+
+  Pending: {
+    // Yellow / Amber (warning)
+    bg: "rgba(237, 176, 32, 0.14)",
+    text: "#b28704",
+    border: "rgba(237, 176, 32, 0.45)",
+  },
+
+  Inactive: {
+    // Red (error)
+    bg: "rgba(211, 47, 47, 0.12)",
+    text: "#d32f2f",
+    border: "rgba(211, 47, 47, 0.35)",
+  },
+};
+
 export default function TableComponent() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const [data, setData] = useState<Item[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchPosts() {
       const res = await fetch(
         "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/users-01_fertyx.json"
       );
-      const data = await res.json();
-      setData(data.slice(0, 7)); // Limit to 5 items
+      const json = await res.json();
+      setData(json.slice(0, 5));
     }
     fetchPosts();
   }, []);
@@ -82,21 +109,28 @@ export default function TableComponent() {
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
-          <div className="font-medium">{row.getValue("name")}</div>
+          <div style={{ color: theme.text.primary }}>
+            {row.getValue("name")}
+          </div>
         ),
       },
       {
         accessorKey: "email",
         header: "Email",
+        cell: ({ row }) => (
+          <span style={{ color: theme.text.secondary }}>
+            {row.getValue("email")}
+          </span>
+        ),
       },
       {
         accessorKey: "location",
         header: "Location",
         cell: ({ row }) => (
-          <div>
-            <span className="text-lg leading-none">{row.original.flag}</span>{" "}
+          <span style={{ color: theme.text.secondary }}>
+            <span className="mr-1">{row.original.flag}</span>
             {row.getValue("location")}
-          </div>
+          </span>
         ),
       },
       {
@@ -105,21 +139,17 @@ export default function TableComponent() {
         cell: ({ row }) => {
           const currentStatus = row.getValue("status") as Item["status"];
 
-          const statusClasses =
-            currentStatus === "Active"
-              ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-              : currentStatus === "Pending"
-              ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
-              : "bg-zinc-700 text-zinc-100 border border-zinc-500/40";
-
           const handleStatusChange = (newStatus: Item["status"]) => {
-            const rowId = row.original.id;
             setData((prev) =>
               prev.map((item) =>
-                item.id === rowId ? { ...item, status: newStatus } : item
+                item.id === row.original.id
+                  ? { ...item, status: newStatus }
+                  : item
               )
             );
           };
+
+          const style = STATUS_STYLE[currentStatus];
 
           return (
             <Popover>
@@ -130,28 +160,35 @@ export default function TableComponent() {
                   onMouseDown={(e) => e.stopPropagation()}
                 >
                   <Badge
-                    className={cn(
-                      "px-2 py-0.5 text-xs cursor-pointer",
-                      statusClasses
-                    )}
+                    className="px-2 py-0.5 text-xs cursor-pointer"
+                    style={{
+                      backgroundColor: style.bg,
+                      color: style.text,
+                      border: `1px solid ${style.border}`,
+                    }}
                   >
                     {currentStatus}
                   </Badge>
                 </button>
               </PopoverTrigger>
 
-              {/* Tooltip-like popover, same style as your example */}
               <PopoverContent
                 side="top"
-                className="max-w-[220px] py-3 shadow-none bg-zinc-900 border border-zinc-800"
+                className="max-w-[220px] py-3 shadow-none"
+                style={{
+                  backgroundColor: theme.surface.modal,
+                  border: `1px solid ${theme.border.default}`,
+                  color: theme.text.primary,
+                }}
               >
                 <div className="space-y-3">
-                  <div className="space-y-1">
-                    <p className="font-medium text-[13px]">Change status</p>
-                    <p className="text-muted-foreground text-xs">
+                  <div>
+                    <p className="text-sm font-medium">Change status</p>
+                    <p className="text-xs" style={{ color: theme.text.muted }}>
                       Select a new status for this row.
                     </p>
                   </div>
+
                   <div className="flex flex-col gap-1">
                     {STATUS_OPTIONS.map((status) => (
                       <button
@@ -161,10 +198,14 @@ export default function TableComponent() {
                           e.stopPropagation();
                           handleStatusChange(status);
                         }}
-                        className={cn(
-                          "h-7 w-full rounded px-2 text-left text-xs hover:bg-zinc-800",
-                          status === currentStatus && "bg-zinc-800 text-white"
-                        )}
+                        className="h-7 w-full rounded px-2 text-left text-xs"
+                        style={{
+                          backgroundColor:
+                            status === currentStatus
+                              ? theme.surface.elevated
+                              : "transparent",
+                          color: theme.text.primary,
+                        }}
                       >
                         {status}
                       </button>
@@ -180,12 +221,17 @@ export default function TableComponent() {
         accessorKey: "balance",
         header: () => <div className="text-right">Balance</div>,
         cell: ({ row }) => {
-          const amount = Number(row.getValue("balance") as number);
+          const amount = Number(row.getValue("balance"));
           const formatted = new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
           }).format(amount);
-          return <div className="text-right">{formatted}</div>;
+
+          return (
+            <div className="text-right" style={{ color: theme.text.secondary }}>
+              {formatted}
+            </div>
+          );
         },
       },
     ],
@@ -198,16 +244,20 @@ export default function TableComponent() {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const router = useRouter();
-
   return (
     <div className="w-full">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow className="hover:bg-transparent" key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+          {table.getHeaderGroups().map((group) => (
+            <TableRow key={group.id}>
+              {group.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  style={{
+                    color: theme.text.muted,
+                    borderBottom: `1px solid ${theme.border.default}`,
+                  }}
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -219,20 +269,31 @@ export default function TableComponent() {
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                data-state={row.getIsSelected() && "selected"}
                 key={row.id}
-                onClick={()=> router.push(
-  `/workspace/${workspaceId}/row/${row.id}`,
-  { scroll: false }
-)
-}
+                onClick={() =>
+                  router.push(`/workspace/${workspaceId}/row/${row.id}`, {
+                    scroll: false,
+                  })
+                }
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: row.getIsSelected()
+                    ? theme.surface.elevated
+                    : "transparent",
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    style={{
+                      borderBottom: `1px solid ${theme.border.subtle}`,
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -241,16 +302,18 @@ export default function TableComponent() {
           ) : (
             <TableRow>
               <TableCell
-                className="h-24 text-center"
                 colSpan={table.getAllColumns().length}
+                className="h-24 text-center"
+                style={{ color: theme.text.muted }}
               >
                 No results.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
-        <TableFooter className="bg-transparent">
-          <TableRow className="hover:bg-transparent">
+
+        <TableFooter>
+          <TableRow>
             <TableCell colSpan={5}>Total</TableCell>
             <TableCell className="text-right">
               {new Intl.NumberFormat("en-US", {

@@ -1,4 +1,3 @@
-// components/TextAreaComposer.tsx
 "use client";
 
 import { useId, useState } from "react";
@@ -9,8 +8,7 @@ import {
   SmilePlus,
   Paperclip,
   Image,
-  AtSign,
-  Hash,
+  Pencil,
   Bold,
   Italic,
   Underline,
@@ -23,52 +21,50 @@ import {
   Minus,
   CircleCheckBig,
   ArrowRightLeft,
-  Pencil,
 } from "lucide-react";
+import { theme } from "@/app/theme/theme";
 
 export default function TextAreaComposer() {
   const id = useId();
   const [isExpanded, setIsExpanded] = useState(false);
   const [value, setValue] = useState("");
 
-  const handleFocus = () => {
-    setIsExpanded(true);
-  };
-
-  const handleCancel = () => {
-    setIsExpanded(false);
-    setValue("");
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value);
-  };
-
   const canSubmit = value.trim().length > 0;
 
   return (
     <div
       className={cn(
-        "w-full rounded-md border border-zinc-700 bg-zinc-900/70 text-sm transition-all duration-200",
+        "w-full rounded-md transition-all duration-200",
         isExpanded ? "p-2 px-3" : "px-2 pb-2"
       )}
+      style={{
+        backgroundColor: theme.surface.card,
+        border: `1px solid ${theme.border.default}`,
+      }}
     >
-      {/* TOP TOOLBAR – only when expanded */}
+      {/* TOP TOOLBAR */}
       {isExpanded && (
-        <div className="mb-2 flex items-center justify-between text-xs text-zinc-400">
+        <div
+          className="mb-2 flex items-center justify-between text-xs"
+          style={{ color: theme.icon.muted }}
+        >
           <div className="flex items-center gap-4">
-            <Bold className="h-3.5 w-3.5 cursor-pointer" />
-            <Italic className="h-3.5 w-3.5 cursor-pointer" />
-            <Underline className="h-3.5 w-3.5 cursor-pointer" />
-            <ALargeSmall className="h-3.5 w-3.5 cursor-pointer" />
-            <ListOrdered className="h-3.5 w-3.5 cursor-pointer" />
-            <List className="h-3.5 w-3.5 cursor-pointer" />
-            <ListTree className="h-3.5 w-3.5 cursor-pointer" />
-            <Link2 className="h-3.5 w-3.5 cursor-pointer" />
-            <TextAlignEnd className="h-3.5 w-3.5 cursor-pointer" />
-            <Minus className="h-3.5 w-3.5 cursor-pointer" />
-            <ArrowRightLeft className="h-3.5 w-3.5 cursor-pointer" />
-            <CircleCheckBig className="h-3.5 w-3.5 cursor-pointer" />
+            {[
+              Bold,
+              Italic,
+              Underline,
+              ALargeSmall,
+              ListOrdered,
+              List,
+              ListTree,
+              Link2,
+              TextAlignEnd,
+              Minus,
+              ArrowRightLeft,
+              CircleCheckBig,
+            ].map((Icon, i) => (
+              <Icon key={i} className="h-3.5 w-3.5 cursor-pointer" />
+            ))}
           </div>
         </div>
       )}
@@ -78,41 +74,54 @@ export default function TextAreaComposer() {
         id={id}
         placeholder="Leave a comment"
         value={value}
-        onFocus={handleFocus}
-        onChange={handleChange}
+        onFocus={() => setIsExpanded(true)}
+        onChange={(e) => setValue(e.target.value)}
         rows={isExpanded ? 4 : 1}
         className={cn(
-          // kill double borders/shadows and make it blend with card
-          "border-none bg-transparent px-0 shadow-none focus-visible:ring-0 focus-visible:border-none placeholder:text-zinc-500",
+          "border-none bg-transparent px-0 shadow-none focus-visible:ring-0",
           isExpanded ? "min-h-[96px]" : "min-h-[32px]"
         )}
+        style={{
+          color: theme.text.primary,
+        }}
       />
 
-      {/* BOTTOM TOOLBAR – always visible, changes slightly when expanded */}
+      {/* BOTTOM BAR */}
       <div className="mt-2 flex items-center justify-between">
-        <div className="flex items-center gap-4 text-zinc-400">
-          <SmilePlus className="h-4 w-4 cursor-pointer hover:text-zinc-200" />
-          <Paperclip className="h-4 w-4 cursor-pointer hover:text-zinc-200" />
-          <Image className="h-4 w-4 cursor-pointer hover:text-zinc-200" />
-          <Pencil className="h-4 w-4 cursor-pointer hover:text-zinc-200" />
+        <div
+          className="flex items-center gap-4"
+          style={{ color: theme.icon.muted }}
+        >
+          <SmilePlus className="h-4 w-4 cursor-pointer" />
+          <Paperclip className="h-4 w-4 cursor-pointer" />
+          <Image className="h-4 w-4 cursor-pointer" />
+          <Pencil className="h-4 w-4 cursor-pointer" />
         </div>
 
-        {isExpanded ? (
+        {isExpanded && (
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="sm"
-              className=" px-2 text-xs bg-[#B53B22] text-white-400 hover:text-zinc-100"
-              onClick={handleCancel}
+              style={{
+                color: theme.text.secondary,
+              }}
+              onClick={() => {
+                setIsExpanded(false);
+                setValue("");
+              }}
             >
               Cancel
             </Button>
+
             <Button
               size="sm"
-              className="px-3 text-xs bg-[#5494f2] text-white-400"
               disabled={!canSubmit}
+              style={{
+                backgroundColor: theme.button.primary.bg,
+                color: theme.button.primary.text,
+              }}
               onClick={() => {
-                // TODO: send update
                 console.log("Update:", value);
                 setIsExpanded(false);
                 setValue("");
@@ -121,8 +130,6 @@ export default function TextAreaComposer() {
               Update
             </Button>
           </div>
-        ) : (
-          ""
         )}
       </div>
     </div>

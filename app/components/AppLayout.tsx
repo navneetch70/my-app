@@ -1,4 +1,4 @@
-// AppLayout.tsx
+// /app/components/AppLayout.tsx
 "use client";
 
 import { useState } from "react";
@@ -8,45 +8,39 @@ import Workspace from "./Workspace";
 import SideNavigation from "./side-navigation/side-navigation";
 import HStack from "../Stack/HStack";
 import NavBarMainComponent from "@/components/comp-588";
-import { Tabs } from "@/components/ui/tabs"; // ✅ FIX
 
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [tabLabelMap, setTabLabelMap] = useState<Record<string, string>>({});
 
   const activeWorkspaceId = pathname.startsWith("/workspace/")
-  ? pathname.split("/workspace/")[1]
-  : null;
+    ? pathname.split("/workspace/")[1]
+    : null;
 
   const currentLabel =
-  (activeWorkspaceId && tabLabelMap[activeWorkspaceId]) ||
-  tabLabelMap[pathname.replace("/", "")] ||
-  "Home";
-
+    (activeWorkspaceId && tabLabelMap[activeWorkspaceId]) ||
+    tabLabelMap[pathname.replace("/", "")] ||
+    "Home";
 
   return (
-    <Tabs value={pathname}>
-      <VStack width="100vw" height="100vh" gap={0}>
-        <HStack width="100vw">
-          <NavBarMainComponent />
-        </HStack>
+    <VStack width="100vw" height="100vh" gap={0}>
+      {/* Top Navbar */}
+      <HStack width="100vw">
+        <NavBarMainComponent />
+      </HStack>
 
-        <HStack width="100%" height="100%">
-          <SideNavigation onTabLabelMapChange={setTabLabelMap} />
+      {/* Main Content */}
+      <HStack width="100%" height="100%" gap={0}>
+        <SideNavigation onTabLabelMapChange={setTabLabelMap} />
 
-         <Workspace
-  currentLabel={currentLabel}
-  activeWorkspaceId={activeWorkspaceId}
->
-  {children}
-</Workspace>
-
-        </HStack>
-      </VStack>
-    </Tabs>
+        <Workspace
+          key={pathname} // ✅ ensures clean remount
+          currentLabel={currentLabel}
+          activeWorkspaceId={activeWorkspaceId}
+        >
+          {children}
+        </Workspace>
+      </HStack>
+    </VStack>
   );
 }

@@ -1,5 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { theme } from "@/app/theme/theme";
 
 interface RightBTNProps {
   icon: LucideIcon;
@@ -14,11 +15,22 @@ export default function RightBTNComponent({
 }: RightBTNProps) {
   return (
     <Button
-      variant="secondary"
-      className="bg-zinc-800 hover:bg-zinc-700 flex items-center gap-2"
+      variant="ghost"
+      className="flex items-center gap-2 shadow-none"
+      style={{
+        backgroundColor: theme.surface.card,
+        border: `1px solid ${theme.border.default}`,
+        color: theme.text.secondary,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = theme.surface.elevated;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = theme.surface.card;
+      }}
     >
-      <Icon size={iconSize} className="opacity-80" />
-      {label}
+      <Icon size={iconSize} style={{ color: theme.icon.muted }} />
+      {label && <span>{label}</span>}
     </Button>
   );
 }

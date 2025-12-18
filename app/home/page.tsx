@@ -1,20 +1,27 @@
-import BackgroundEffects from "../components/background/BackgroundEffects";
+"use client";
+
 import AppLayout from "../components/AppLayout";
+import { theme } from "../theme/theme";
+import { usePathname } from "next/navigation";
 
 export default function HomePage() {
-  return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#1a1d18] via-black to-[#2a2e26] text-[#e6e1d7]">
-      <BackgroundEffects />
+  const pathname = usePathname();
 
-      <div className="relative z-20">
-        <AppLayout>
-          {/* 👉 Right-side content for My Work */}
-          <div className="text-white">
-            <h2 className="text-lg font-semibold">My Home</h2>
-            <p>Tasks, assignments, and progress will appear here.</p>
-          </div>
-        </AppLayout>
-      </div>
+  return (
+    <div className="relative z-20">
+      <AppLayout>
+        <div>
+          <h2
+            className="text-lg font-semibold"
+            style={{ color: theme.text.primary }}
+          >
+            My Home
+          </h2>
+          <p style={{ color: theme.text.secondary }}>
+            Tasks, assignments, and progress will appear here.
+          </p>
+        </div>
+      </AppLayout>
     </div>
   );
 }

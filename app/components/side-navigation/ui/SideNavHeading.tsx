@@ -24,7 +24,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import type { ModelKey } from '../side-navigation'
+import type { ModelKey } from "../side-navigation";
+import { theme } from "../../../theme/theme";
+
 type Props = {
   onAddWorkspace?: (label: string) => void;
   onModelChange?: (model: ModelKey) => void;
@@ -46,61 +48,74 @@ export default function SideNavHeading({
   };
 
   return (
-    <header className="px-4 w-full">
-      <div className="flex items-center justify-between gap-4 w-full">
-        {/* Left side: model select */}
+    <header className="w-full px-4">
+      <div className="flex w-full items-center justify-between gap-4">
+        {/* LEFT – MODEL SELECT */}
         <div className="w-full">
           <Select
             value={selectedModel}
             onValueChange={(value) => onModelChange?.(value as ModelKey)}
           >
-            <SelectTrigger className="w-full text-white [&>svg]:text-white">
-              <BotMessageSquareIcon size={16} />
+            <SelectTrigger
+              className="w-full gap-2"
+              style={{
+                backgroundColor: theme.surface.card,
+                border: `1px solid ${theme.border.default}`,
+                color: theme.text.primary,
+              }}
+            >
+              <BotMessageSquareIcon
+                size={16}
+                style={{ color: theme.icon.muted }}
+              />
               <SelectValue placeholder="Choose an AI model" />
             </SelectTrigger>
 
-            <SelectContent className="bg-zinc-800 text-white">
-              <SelectGroup className="flex flex-col gap-2">
-                <SelectItem value="orion-alpha-45">
-                  Orion-Alpha 4.5
-                </SelectItem>
-
-                <SelectItem value="orion-code-4">
-                  Orion-Code 4
-                </SelectItem>
-
-                <SelectItem value="nova-chat-4">
-                  Nova-Chat 4
-                </SelectItem>
-
-                <SelectItem value="galaxy-max-4">
-                  Galaxy-Max 4
-                </SelectItem>
+            <SelectContent
+              style={{
+                backgroundColor: theme.surface.card,
+                border: `1px solid ${theme.border.default}`,
+                color: theme.text.primary,
+              }}
+            >
+              <SelectGroup className="flex flex-col gap-1">
+                <SelectItem value="orion-alpha-45">Orion-Alpha 4.5</SelectItem>
+                <SelectItem value="orion-code-4">Orion-Code 4</SelectItem>
+                <SelectItem value="nova-chat-4">Nova-Chat 4</SelectItem>
+                <SelectItem value="galaxy-max-4">Galaxy-Max 4</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Right side: actions */}
+        {/* RIGHT – ACTIONS */}
         <div className="flex items-center gap-2">
           <UserMenu />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
-                aria-label="Add file"
+                aria-label="Add workspace"
                 size="icon"
                 variant="ghost"
-                className="size-8 rounded-full hover:bg-white/10 text-white"
+                style={{
+                  color: theme.icon.primary,
+                }}
               >
                 <Plus size={16} />
               </Button>
             </AlertDialogTrigger>
 
-            <AlertDialogContent>
+            <AlertDialogContent
+              style={{
+                backgroundColor: theme.surface.modal,
+                border: `1px solid ${theme.border.default}`,
+                color: theme.text.primary,
+              }}
+            >
               <AlertDialogHeader>
                 <AlertDialogTitle>Enter a File Name</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription style={{ color: theme.text.muted }}>
                   This will create a new workspace item.
                 </AlertDialogDescription>
 
@@ -110,14 +125,31 @@ export default function SideNavHeading({
                   onChange={(e) => setNewLabel(e.target.value)}
                   placeholder="File Name"
                   autoFocus
+                  style={{
+                    backgroundColor: theme.surface.card,
+                    border: `1px solid ${theme.border.default}`,
+                    color: theme.text.primary,
+                  }}
                 />
               </AlertDialogHeader>
 
-              <div className="flex justify-between mt-4">
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <div className="mt-4 flex justify-between">
+                <AlertDialogCancel
+                  style={{
+                    backgroundColor: theme.surface.card,
+                    border: `1px solid ${theme.border.default}`,
+                    color: theme.text.primary,
+                  }}
+                >
+                  Cancel
+                </AlertDialogCancel>
+
                 <AlertDialogAction
-                  className="bg-white text-black"
                   onClick={handleConfirm}
+                  style={{
+                    backgroundColor: theme.button.primary.bg,
+                    color: theme.button.primary.text,
+                  }}
                 >
                   Confirm
                 </AlertDialogAction>

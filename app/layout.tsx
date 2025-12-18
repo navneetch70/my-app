@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal, // ✅ ADD THIS
+  modal,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;
@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        {modal} 
+        {modal}
       </body>
     </html>
   );

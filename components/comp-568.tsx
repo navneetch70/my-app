@@ -3,7 +3,7 @@
 import { hotkeysCoreFeature, syncDataLoaderFeature } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import { Dock, FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
-import { Tree, TreeItem, TreeItemLabel } from "../app/component/side-navigation/ui/SideNavTree";
+import { Tree, TreeItem, TreeItemLabel } from "./tree";
 
 interface Item {
   name: string;

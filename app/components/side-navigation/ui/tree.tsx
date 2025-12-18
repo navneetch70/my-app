@@ -2,8 +2,9 @@
 
 import { hotkeysCoreFeature, syncDataLoaderFeature } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
-import { Dock, FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
+import { Dock, FolderIcon, FolderOpenIcon } from "lucide-react";
 import { Tree, TreeItem, TreeItemLabel } from "./SideNavTree";
+import { theme } from "@/app/theme/theme";
 
 interface Item {
   name: string;
@@ -18,9 +19,7 @@ const items: Record<string, Item> = {
   },
   components: { name: "Components" },
   content: { name: "Content" },
-  "design-system": {
-    name: "Design System",
-  },
+  "design-system": { name: "Design System" },
   engineering: {
     children: ["frontend", "backend", "platform-team"],
     name: "Favourites",
@@ -57,27 +56,44 @@ export default function Component() {
   });
 
   return (
-    <div style={{width:"100%"}} className="flex w-full flex-col gap-2 *:first:grow">
-      <div style={{width:"100%"}}  className="w-full pt-4 px-4">
+    <div
+      style={{ width: "100%" }}
+      className="flex w-full flex-col gap-2 *:first:grow"
+    >
+      <div style={{ width: "100%" }} className="w-full pt-4 px-4">
         <Tree
           className="before:-ms-1 relative before:absolute before:inset-0 bg-black)]"
           indent={indent}
           tree={tree}
+          style={{ color: theme.text.secondary }}
         >
           {tree.getItems().map((item) => {
             return (
               <TreeItem item={item} key={item.getId()}>
-                <TreeItemLabel className="before:-inset-y-0.5 before:-z-10 relative before:absolute before:inset-x-0 ">
+                <TreeItemLabel
+                  style={{ color: theme.text.secondary }}
+                  className="before:-inset-y-0.5 before:-z-10 relative before:absolute before:inset-x-0 "
+                >
                   <span className="-order-1 flex flex-1 items-center gap-2">
                     {item.isFolder() ? (
                       item.isExpanded() ? (
-                        <FolderOpenIcon className="pointer-events-none size-4 text-muted-foreground" />
+                        <FolderOpenIcon
+                          style={{ color: theme.icon.muted }}
+                          className="pointer-events-none size-4"
+                        />
                       ) : (
-                        <FolderIcon className="pointer-events-none size-4 text-muted-foreground" />
+                        <FolderIcon
+                          style={{ color: theme.icon.muted }}
+                          className="pointer-events-none size-4"
+                        />
                       )
                     ) : (
-                      <Dock className="pointer-events-none size-4 text-muted-foreground" />
+                      <Dock
+                        style={{ color: theme.icon.muted }}
+                        className="pointer-events-none size-4"
+                      />
                     )}
+
                     {item.getItemName()}
                   </span>
                 </TreeItemLabel>

@@ -1,24 +1,20 @@
+"use client";
+
 import {
   ArrowUpDown,
   BookText,
-  Box,
   ChevronDownIcon,
   ChevronUpIcon,
   CircleUser,
   Ellipsis,
   EyeOff,
   Funnel,
-  Mouse as House,
-  Link2,
-  PanelsTopLeft,
   Plus,
   Search,
   Table2,
-  XIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Tabs,
@@ -30,9 +26,11 @@ import HStack from "@/app/Stack/HStack";
 import RightBTNComponent from "./comp-83";
 import VStack from "@/app/Stack/VStack";
 import TableComponent from "./comp-477";
-import { use, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { theme } from "@/app/theme/theme";
+import InviteBtnComponent from "./comp-114";
 
 export default function TabComponent() {
   const [showFeedbackTable, setShowFeedbackTable] = useState(true);
@@ -42,54 +40,68 @@ export default function TabComponent() {
 
   return (
     <Tabs defaultValue="tab-1" className="w-full">
+      {/* TOP TABS */}
       <ScrollArea>
-        <TabsList className="relative mb-3 justify-start h-auto w-full gap-0.5 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-zinc-700">
+        <TabsList
+          className="relative mb-3 h-auto w-full justify-start gap-0.5 bg-transparent p-0"
+          style={{
+            borderBottom: `1px solid ${theme.border.default}`,
+          }}
+        >
           <TabsTrigger
-            className="overflow-hidden rounded-b-none border-x border-t border-zinc-700 bg-zinc-900 py-2 text-zinc-400 data-[state=active]:z-10 data-[state=active]:bg-zinc-800 data-[state=active]:text-white data-[state=active]:shadow-none"
             value="tab-1"
+            className="rounded-b-none border-x border-t py-2"
+            style={{
+              backgroundColor: theme.surface.card,
+              borderColor: theme.border.default,
+              color: theme.text.secondary,
+            }}
+            data-state="active"
           >
-            <Ellipsis
-              aria-hidden="true"
-              className="-ms-0.5 me-1.5 opacity-60"
-              size={16}
-            />
+            <Ellipsis size={16} className="me-1.5 opacity-60" />
             Main Table
           </TabsTrigger>
+
           <TabsTrigger
-            className="overflow-hidden rounded-b-none border-x border-t border-zinc-700 bg-zinc-900 py-2 text-zinc-400 data-[state=active]:z-10 data-[state=active]:bg-zinc-800 data-[state=active]:text-white data-[state=active]:shadow-none"
             value="tab-2"
+            className="rounded-b-none border-x border-t py-2"
+            style={{
+              backgroundColor: theme.surface.card,
+              borderColor: theme.border.default,
+              color: theme.text.secondary,
+            }}
           >
-            <BookText
-              aria-hidden="true"
-              className="-ms-0.5 me-1.5 opacity-60"
-              size={16}
-            />
+            <BookText size={16} className="me-1.5 opacity-60" />
             Form
           </TabsTrigger>
 
           <Plus
-            aria-hidden="true"
-            className="-ms-0.5 me-1.5 opacity-60 ml-2 cursor-pointer hover:text-white"
             size={16}
+            className="ml-2 cursor-pointer"
+            style={{ color: theme.icon.muted }}
           />
         </TabsList>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+
+      {/* TAB 1 */}
       <TabsContent value="tab-1">
         <HStack width="100%" style={{ justifyContent: "space-between" }}>
+          {/* LEFT CONTROLS */}
           <HStack>
-            <div className="inline-flex divide-x divide-primary-foreground/30 rounded-md shadow-xs rtl:space-x-reverse border border-primary-foreground/20 bg-primary/10">
-              <Button className="rounded-none bg-zinc-800 hover:bg-zinc-700 shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10">
-                New Item
-              </Button>
-              <Button
-                aria-label="Options"
-                className="rounded-none bg-zinc-800 hover:bg-zinc-700 shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10"
-                size="icon"
-              >
-                <ChevronDownIcon aria-hidden="true" size={16} />
-              </Button>
+            <div
+              className="inline-flex divide-x rounded-md"
+              style={{
+                border: `1px solid ${theme.border.default}`,
+                backgroundColor: theme.surface.card,
+              }}
+            >
+              <InviteBtnComponent
+                label="New Item"
+                icon={<Plus size={16} className="opacity-60" />}
+              />
             </div>
+
             <RightBTNComponent iconSize={16} icon={Search} label="Search" />
             <RightBTNComponent iconSize={16} icon={CircleUser} label="Person" />
             <RightBTNComponent iconSize={16} icon={Funnel} label="Filter" />
@@ -98,6 +110,8 @@ export default function TabComponent() {
             <RightBTNComponent iconSize={16} icon={Table2} label="Group by" />
             <RightBTNComponent iconSize={16} icon={Ellipsis} label="" />
           </HStack>
+
+          {/* RIGHT TOGGLE */}
           <HStack onClick={() => setFeedbackHandle((prev) => !prev)}>
             <RightBTNComponent
               iconSize={16}
@@ -106,54 +120,72 @@ export default function TabComponent() {
             />
           </HStack>
         </HStack>
+
         {feedbackHandle && (
           <VStack gap={0}>
-            {/* Header that toggles the table */}
+            {/* FEEDBACK HEADER */}
             <HStack
               className={cn(
-                "mt-4 bg-zinc-900 border border-zinc-700 p-2 cursor-pointer select-none text-[#5494f2]",
-                showFeedbackTable
-                  ? "rounded-t-md border-b-0" // open: top rounded, no bottom border
-                  : "rounded-md border-b-zinc-700" // closed: full rounded box
+                "mt-4 cursor-pointer select-none p-2",
+                showFeedbackTable ? "rounded-t-md border-b-0" : "rounded-md"
               )}
+              style={{
+                backgroundColor: theme.surface.card,
+                border: `1px solid ${theme.border.default}`,
+                color: theme.text.primary,
+              }}
               onClick={() => setShowFeedbackTable((prev) => !prev)}
             >
-              {showFeedbackTable ? (
-                <ChevronDownIcon className="transition-all" />
-              ) : (
-                <ChevronUpIcon className="transition-all" />
-              )}
+              {showFeedbackTable ? <ChevronDownIcon /> : <ChevronUpIcon />}
               Incoming Feedback
             </HStack>
 
-            {/* Table container (only if open) */}
+            {/* TABLE */}
             {showFeedbackTable && (
               <HStack
                 width="100%"
-                className="bg-zinc-900 rounded-b-md border border-zinc-700"
+                className="rounded-b-md"
+                style={{
+                  backgroundColor: theme.surface.card,
+                  border: `1px solid ${theme.border.default}`,
+                  borderTop: "none",
+                  overflow: "hidden",
+                }}
               >
                 <TableComponent />
               </HStack>
             )}
 
-            {/* Add new group button */}
-            <div className="inline-flex divide-x divide-primary-foreground/30 mt-4 rounded-md shadow-xs rtl:space-x-reverse border border-primary-foreground/20 bg-primary/10">
-              <Button className="rounded-none bg-zinc-800 hover:bg-zinc-700 shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10">
-                <Plus aria-hidden="true" size={16} />
+            {/* ADD GROUP */}
+            <div
+              className="mt-4 inline-flex divide-x rounded-md"
+              style={{
+                border: `1px solid ${theme.border.default}`,
+                backgroundColor: theme.surface.card,
+              }}
+            >
+              <Button
+                className="rounded-none shadow-none"
+                style={{
+                  backgroundColor: theme.surface.card,
+                  color: theme.text.primary,
+                }}
+              >
+                <Plus size={16} className="mr-2" />
                 Add new group
               </Button>
             </div>
           </VStack>
         )}
       </TabsContent>
+
+      {/* TAB 2 */}
       <TabsContent value="tab-2">
-        <p className="p-4 pt-1 text-center text-zinc-500 text-xs">
+        <p
+          className="p-4 pt-1 text-center text-xs"
+          style={{ color: theme.text.muted }}
+        >
           Content for Tab 2
-        </p>
-      </TabsContent>
-      <TabsContent value="tab-3">
-        <p className="p-4 pt-1 text-center text-zinc-500 text-xs">
-          Content for Tab 3
         </p>
       </TabsContent>
     </Tabs>

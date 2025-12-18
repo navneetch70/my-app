@@ -59,7 +59,7 @@ export default function NavComponent() {
           <div className="flex items-center gap-4">
             <MessageCircle />
             <UserMenu />
-            <InviteBtnComponent />
+            <InviteBtnComponent label="Invite" />
             <Ellipsis />
           </div>
         </div>
