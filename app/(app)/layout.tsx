@@ -1,11 +1,11 @@
-// /app/components/AppLayout.tsx
+// app/(app)/layout.tsx
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { usePathname } from "next/navigation";
 import VStack from "../Stack/VStack";
-import Workspace from "./Workspace";
-import SideNavigation from "./side-navigation/side-navigation";
+import Workspace from "../components/Workspace";
+import SideNavigation from "../components/side-navigation/side-navigation";
 import HStack from "../Stack/HStack";
 import NavBarMainComponent from "@/components/comp-588";
 
@@ -31,10 +31,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <HStack width="100%" height="100%" gap={0}>
-        <SideNavigation onTabLabelMapChange={setTabLabelMap} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SideNavigation onTabLabelMapChange={setTabLabelMap} />
+        </Suspense>
 
         <Workspace
-          key={pathname} // ✅ ensures clean remount
+          key={pathname}
           currentLabel={currentLabel}
           activeWorkspaceId={activeWorkspaceId}
         >
