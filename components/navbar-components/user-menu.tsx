@@ -19,8 +19,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { theme } from "@/app/theme/theme";
+import { useEffect, useState } from "react";
+import { getUserProfile } from "@/app/api/user.api";
 
 export default function UserMenu() {
+  const [user, setUser] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+  });
+  useEffect(() => {
+    getUserProfile().then((response) => {
+      setUser(response.data);
+    });
+  }, []);
+  const name = user ? `${user.first_name} ${user.last_name}` : "Loading...";
+  const email = user ? user.email : "Loading...";
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -46,7 +60,7 @@ export default function UserMenu() {
                 backgroundColor: theme.surface.card,
               }}
             >
-              KK
+              {name.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -66,13 +80,13 @@ export default function UserMenu() {
             className="truncate text-sm font-medium"
             style={{ color: theme.text.primary }}
           >
-            Keith Kennedy
+            {name}
           </span>
           <span
             className="truncate text-xs"
             style={{ color: theme.text.muted }}
           >
-            k.kennedy@coss.com
+            {email}
           </span>
         </DropdownMenuLabel>
 
@@ -80,7 +94,7 @@ export default function UserMenu() {
           style={{ backgroundColor: theme.border.subtle }}
         />
 
-        <DropdownMenuGroup>
+        {/* <DropdownMenuGroup>
           <DropdownMenuItem style={{ color: theme.text.secondary }}>
             <BoltIcon size={16} style={{ opacity: 0.6 }} />
             <span>Option 1</span>
@@ -95,9 +109,9 @@ export default function UserMenu() {
             <BookOpenIcon size={16} style={{ opacity: 0.6 }} />
             <span>Option 3</span>
           </DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
 
-        <DropdownMenuSeparator
+        {/* <DropdownMenuSeparator
           style={{ backgroundColor: theme.border.subtle }}
         />
 
@@ -111,7 +125,7 @@ export default function UserMenu() {
             <UserPenIcon size={16} style={{ opacity: 0.6 }} />
             <span>Option 5</span>
           </DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
 
         <DropdownMenuSeparator
           style={{ backgroundColor: theme.border.subtle }}

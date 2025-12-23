@@ -10,18 +10,6 @@ import HStack from "../Stack/HStack";
 import NavBarMainComponent from "@/components/comp-588";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const [tabLabelMap, setTabLabelMap] = useState<Record<string, string>>({});
-
-  const activeWorkspaceId = pathname.startsWith("/workspace/")
-    ? pathname.split("/workspace/")[1]
-    : null;
-
-  const currentLabel =
-    (activeWorkspaceId && tabLabelMap[activeWorkspaceId]) ||
-    tabLabelMap[pathname.replace("/", "")] ||
-    "Home";
-
   return (
     <VStack width="100vw" height="100vh" gap={0}>
       {/* Top Navbar */}
@@ -31,17 +19,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <HStack width="100%" height="100%" gap={0}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <SideNavigation onTabLabelMapChange={setTabLabelMap} />
-        </Suspense>
-
-        <Workspace
+        {/* <Suspense fallback={<div>Loading...</div>}> */}
+        <SideNavigation />
+        {/* </Suspense> */}
+        <VStack style={{ flex: 1 }}>{children}</VStack>
+        {/* <Workspace
           key={pathname}
           currentLabel={currentLabel}
           activeWorkspaceId={activeWorkspaceId}
         >
           {children}
-        </Workspace>
+        </Workspace> */}
       </HStack>
     </VStack>
   );

@@ -1,6 +1,10 @@
 "use client";
 
 import { theme } from "@/app/theme/theme";
+<<<<<<< HEAD
+=======
+import TabComponent from "@/components/comp-436";
+>>>>>>> 7dbd665 (Backend integration)
 
 export default function HomePage() {
   return (
@@ -14,6 +18,10 @@ export default function HomePage() {
       <p style={{ color: theme.text.secondary }}>
         Tasks, assignments, and progress will appear here.
       </p>
+<<<<<<< HEAD
+=======
+      {/* <TabComponent /> */}
+>>>>>>> 7dbd665 (Backend integration)
     </div>
   );
 }

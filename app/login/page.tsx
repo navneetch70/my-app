@@ -4,22 +4,47 @@ import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, Loader2, Github } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { theme } from "../theme/theme";
+import { login } from "../api/auth.api";
 
 export default function SignInPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("sb4singh@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     router.push("/home");
+  //   }, 2000);
+  // };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+
+    try {
+      const res = await login({
+        email: email,
+        password: password,
+      });
+
+      // ✅ Save token
+      localStorage.setItem("token", res.data.access_token);
+
+      // ✅ Redirect after login
       router.push("/home");
-    }, 2000);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -157,7 +182,7 @@ export default function SignInPage() {
           </button>
 
           {/* SOCIAL */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
+          {/* <div className="grid grid-cols-2 gap-3 pt-2">
             <button
               type="button"
               className="flex items-center justify-center gap-2 rounded-lg py-2 text-sm transition"
@@ -186,7 +211,7 @@ export default function SignInPage() {
               <Github className="h-4 w-4" />
               GitHub
             </button>
-          </div>
+          </div> */}
         </form>
 
         {/* Footer */}

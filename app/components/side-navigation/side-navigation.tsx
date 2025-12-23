@@ -5,17 +5,12 @@ import React, { useEffect, useState } from "react";
 import VStack from "../../Stack/VStack";
 import Component from "./ui/tree";
 import SideNavHeading from "./ui/SideNavHeading";
-import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SIDE_NAV_ITEMS, SideNavItem } from "./side-nav-config";
 import HStack from "../../Stack/HStack";
 import { Dock, Ellipsis, Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { theme } from "../../theme/theme";
-export type ModelKey =
-  | "orion-alpha-45"
-  | "orion-code-4"
-  | "nova-chat-4"
-  | "galaxy-max-4";
+import { getAssignedLocations } from "@/app/api/home.api";
 
 type SideNavigationProps = {
   onTabLabelMapChange?: (map: Record<string, string>) => void;
@@ -33,41 +28,19 @@ const createWorkspaceItem = (label: string): SideNavItem => {
   };
 };
 
-const INITIAL_WORKSPACES_BY_MODEL: Record<ModelKey, SideNavItem[]> = {
-  "orion-alpha-45": [
-    createWorkspaceItem("General Chat"),
-    createWorkspaceItem("Product Brainstorm"),
-    createWorkspaceItem("Marketing Ideas"),
-  ],
-  "orion-code-4": [
-    createWorkspaceItem("Frontend Tasks"),
-    createWorkspaceItem("API Development"),
-    createWorkspaceItem("Bug Fixes"),
-  ],
-  "nova-chat-4": [
-    createWorkspaceItem("Customer SupportCustomer Support SupportSupport"),
-    createWorkspaceItem("FAQ Assistant"),
-  ],
-  "galaxy-max-4": [
-    createWorkspaceItem("AI Research"),
-    createWorkspaceItem("Large Data Analysis"),
-    createWorkspaceItem("System Design"),
-  ],
-};
-
 export default function SideNavigation({
   onTabLabelMapChange,
 }: SideNavigationProps) {
   const searchParams = useSearchParams();
-  const modelFromUrl = searchParams.get("model") as ModelKey | null;
+  const modelFromUrl = searchParams.get("model") as string | null;
   const pathname = usePathname();
   const router = useRouter();
 
   const isActive = (value: string) =>
     pathname === `/${value}` || pathname === `/workspace/${value}`;
 
-  const [selectedModel, setSelectedModel] = useState<ModelKey>(
-    modelFromUrl ?? "orion-alpha-45"
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    modelFromUrl || undefined
   );
 
   useEffect(() => {
@@ -76,65 +49,46 @@ export default function SideNavigation({
     }
   }, [modelFromUrl]);
 
-  const [workspaceByModel, setWorkspaceByModel] = useState<
-    Record<ModelKey, SideNavItem[]>
-  >(INITIAL_WORKSPACES_BY_MODEL);
-
-  const workspaceItems = workspaceByModel[selectedModel] ?? [];
-
-  useEffect(() => {
-    const map: Record<string, string> = {};
-
-    Object.values(workspaceByModel).forEach((items) =>
-      items.forEach((item) => {
-        map[item.value] = item.label;
-      })
-    );
-
-    SIDE_NAV_ITEMS.forEach((item) => {
-      map[item.value] = item.label;
-    });
-
-    onTabLabelMapChange?.(map);
-  }, [workspaceByModel, onTabLabelMapChange]);
-
   const mainItems = SIDE_NAV_ITEMS.filter((item) => item.section === "main");
 
   const baseTriggerClass =
     "relative w-full max-w-full h-9 overflow-hidden flex items-center justify-start px-3 gap-2 after:absolute after:inset-y-1 after:left-0 after:w-0.5 after:rounded-full";
 
-  const makeValueFromLabel = (label: string) =>
-    label
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "") + `-${Date.now()}`;
+  const [locations, setLocations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddWorkspace = (label: string) => {
-    const trimmed = label.trim();
-    if (!trimmed) return;
+  useEffect(() => {
+    if (!selectedModel) {
+      setSelectedModel(locations[0]?._id || null);
+    }
+  }, [locations]);
 
-    const slug = makeValueFromLabel(trimmed);
+  useEffect(() => {
+    getAssignedLocations()
+      .then((res) => {
+        setLocations(res.data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch locations", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-    const newItem: SideNavItem = {
-      id: slug,
-      section: "workspaces",
-      value: slug,
-      label: trimmed,
-      icon: Dock,
-    };
+  const currentLocation = locations.find((loc) => loc._id === selectedModel);
+  const sources = Object.keys(currentLocation?.sources || {});
 
-    setWorkspaceByModel((prev) => ({
-      ...prev,
-      [selectedModel]: [newItem, ...(prev[selectedModel] || [])],
-    }));
-  };
+  const workspaceItems = sources.map((source) => createWorkspaceItem(source));
+
+  // if (loading) return <p>Loading...</p>;
 
   return (
     <VStack
-      height="100%"
+      height="100vh"
       style={{
-        maxWidth: "400px",
-        flex: 1,
+        maxWidth: "350px",
+        width: "350px",
         justifyContent: "space-between",
         backgroundColor: theme.surface.card,
         borderRight: `1px solid ${theme.border.default}`,
@@ -142,6 +96,36 @@ export default function SideNavigation({
     >
       {/* 🔹 Scrollable content */}
       <VStack width="100%" className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex flex-col gap-1 px-4 py-3 w-full">
+          {mainItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.value);
+
+            return (
+              <button
+                key={item.value}
+                onClick={() => router.push(`/${item.value}`)}
+                className={baseTriggerClass}
+                style={{
+                  color: active ? theme.text.primary : theme.text.secondary,
+                  backgroundColor: active
+                    ? theme.surface.elevated
+                    : "transparent",
+                }}
+              >
+                <Icon size={16} />
+                {item.label}
+
+                {active && (
+                  <span
+                    className="absolute left-0 inset-y-1 w-0.5 rounded-full"
+                    style={{ backgroundColor: theme.text.primary }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
         <Component />
 
         <SideNavHeading
@@ -150,7 +134,8 @@ export default function SideNavigation({
             setSelectedModel(model);
             router.push(`${pathname}?model=${model}`, { scroll: false });
           }}
-          onAddWorkspace={handleAddWorkspace}
+          onAddWorkspace={() => {}}
+          locations={locations}
         />
 
         {/* Workspace header */}
@@ -163,7 +148,7 @@ export default function SideNavigation({
             className="text-xs pl-2"
             style={{ color: theme.text.secondary }}
           >
-            Workspaces
+            Banks
           </span>
 
           <HStack>
@@ -190,9 +175,11 @@ export default function SideNavigation({
             return (
               <button
                 key={item.value}
-                onClick={() =>
-                  router.push(`/workspace/${item.value}?model=${selectedModel}`)
-                }
+                onClick={() => {
+                  router.push(`/workspace/${selectedModel}/${item.value}`, {
+                    scroll: false,
+                  });
+                }}
                 className={baseTriggerClass}
                 style={{
                   color: active ? theme.text.primary : theme.text.secondary,
@@ -219,37 +206,6 @@ export default function SideNavigation({
           })}
         </div>
       </VStack>
-
-      <div className="flex flex-col gap-1 px-4 py-3 w-full">
-        {mainItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.value);
-
-          return (
-            <button
-              key={item.value}
-              onClick={() => router.push(`/${item.value}`)}
-              className={baseTriggerClass}
-              style={{
-                color: active ? theme.text.primary : theme.text.secondary,
-                backgroundColor: active
-                  ? theme.surface.elevated
-                  : "transparent",
-              }}
-            >
-              <Icon size={16} />
-              {item.label}
-
-              {active && (
-                <span
-                  className="absolute left-0 inset-y-1 w-0.5 rounded-full"
-                  style={{ backgroundColor: theme.text.primary }}
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
     </VStack>
   );
 }

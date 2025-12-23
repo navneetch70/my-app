@@ -31,12 +31,22 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { theme } from "@/app/theme/theme";
 import InviteBtnComponent from "./comp-114";
+import moment from "moment";
 
-export default function TabComponent() {
+export default function TabComponent({
+  locationId,
+  source,
+  months,
+}: {
+  locationId?: string;
+  source?: string;
+  months?: string[];
+}) {
   const [showFeedbackTable, setShowFeedbackTable] = useState(true);
   const [feedbackHandle, setFeedbackHandle] = useState(true);
 
   const router = useRouter();
+  console.log("Router object in TabComponent:", router);
 
   return (
     <Tabs defaultValue="tab-1" className="w-full">
@@ -59,10 +69,10 @@ export default function TabComponent() {
             data-state="active"
           >
             <Ellipsis size={16} className="me-1.5 opacity-60" />
-            Main Table
+            {source?.toUpperCase()}
           </TabsTrigger>
 
-          <TabsTrigger
+          {/* <TabsTrigger
             value="tab-2"
             className="rounded-b-none border-x border-t py-2"
             style={{
@@ -73,13 +83,13 @@ export default function TabComponent() {
           >
             <BookText size={16} className="me-1.5 opacity-60" />
             Form
-          </TabsTrigger>
+          </TabsTrigger> */}
 
-          <Plus
+          {/* <Plus
             size={16}
             className="ml-2 cursor-pointer"
             style={{ color: theme.icon.muted }}
-          />
+          /> */}
         </TabsList>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
@@ -89,7 +99,7 @@ export default function TabComponent() {
         <HStack width="100%" style={{ justifyContent: "space-between" }}>
           {/* LEFT CONTROLS */}
           <HStack>
-            <div
+            {/* <div
               className="inline-flex divide-x rounded-md"
               style={{
                 border: `1px solid ${theme.border.default}`,
@@ -100,7 +110,7 @@ export default function TabComponent() {
                 label="New Item"
                 icon={<Plus size={16} className="opacity-60" />}
               />
-            </div>
+            </div> */}
 
             <RightBTNComponent iconSize={16} icon={Search} label="Search" />
             <RightBTNComponent iconSize={16} icon={CircleUser} label="Person" />
@@ -112,81 +122,74 @@ export default function TabComponent() {
           </HStack>
 
           {/* RIGHT TOGGLE */}
-          <HStack onClick={() => setFeedbackHandle((prev) => !prev)}>
+          {/* <HStack onClick={() => setFeedbackHandle((prev) => !prev)}>
             <RightBTNComponent
               iconSize={16}
               icon={feedbackHandle ? ChevronDownIcon : ChevronUpIcon}
               label=""
             />
-          </HStack>
+          </HStack> */}
         </HStack>
 
-        {feedbackHandle && (
-          <VStack gap={0}>
-            {/* FEEDBACK HEADER */}
-            <HStack
-              className={cn(
-                "mt-4 cursor-pointer select-none p-2",
-                showFeedbackTable ? "rounded-t-md border-b-0" : "rounded-md"
-              )}
+        <VStack gap={0}>
+          {/* FEEDBACK HEADER */}
+          {months?.map((month) => {
+            return (
+              <VStack key={month}>
+                <HStack
+                  className={cn(
+                    "mt-4 cursor-pointer select-none p-2",
+                    showFeedbackTable ? "rounded-t-md border-b-0" : "rounded-md"
+                  )}
+                  style={{
+                    backgroundColor: theme.surface.card,
+                    border: `1px solid ${theme.border.default}`,
+                    color: theme.text.primary,
+                  }}
+                  // onClick={() => setShowFeedbackTable((prev) => !prev)}
+                >
+                  {showFeedbackTable ? <ChevronDownIcon /> : <ChevronUpIcon />}
+                  {moment(month, "YYYYMM").format("MMMM YY")}
+                </HStack>
+                <HStack
+                  width="100%"
+                  className="rounded-b-md"
+                  style={{
+                    backgroundColor: theme.surface.card,
+                    border: `1px solid ${theme.border.default}`,
+                    borderTop: "none",
+                    overflow: "hidden",
+                  }}
+                >
+                  <TableComponent
+                    month={month}
+                    source={source}
+                    locationId={locationId}
+                  />
+                </HStack>
+              </VStack>
+            );
+          })}
+          {/* ADD GROUP */}
+          {/* <div
+            className="mt-4 inline-flex divide-x rounded-md"
+            style={{
+              border: `1px solid ${theme.border.default}`,
+              backgroundColor: theme.surface.card,
+            }}
+          >
+            <Button
+              className="rounded-none shadow-none"
               style={{
                 backgroundColor: theme.surface.card,
-                border: `1px solid ${theme.border.default}`,
                 color: theme.text.primary,
               }}
-              onClick={() => setShowFeedbackTable((prev) => !prev)}
             >
-              {showFeedbackTable ? <ChevronDownIcon /> : <ChevronUpIcon />}
-              Incoming Feedback
-            </HStack>
-
-            {/* TABLE */}
-            {showFeedbackTable && (
-              <HStack
-                width="100%"
-                className="rounded-b-md"
-                style={{
-                  backgroundColor: theme.surface.card,
-                  border: `1px solid ${theme.border.default}`,
-                  borderTop: "none",
-                  overflow: "hidden",
-                }}
-              >
-                <TableComponent />
-              </HStack>
-            )}
-
-            {/* ADD GROUP */}
-            <div
-              className="mt-4 inline-flex divide-x rounded-md"
-              style={{
-                border: `1px solid ${theme.border.default}`,
-                backgroundColor: theme.surface.card,
-              }}
-            >
-              <Button
-                className="rounded-none shadow-none"
-                style={{
-                  backgroundColor: theme.surface.card,
-                  color: theme.text.primary,
-                }}
-              >
-                <Plus size={16} className="mr-2" />
-                Add new group
-              </Button>
-            </div>
-          </VStack>
-        )}
-      </TabsContent>
-
-      {/* TAB 2 */}
-      <TabsContent value="tab-2">
-        <p
-          className="p-4 pt-1 text-center text-xs"
-          style={{ color: theme.text.muted }}
-        >
-          Content for Tab 2
-        </p>
+              <Plus size={16} className="mr-2" />
+              Add new group
+            </Button>
+          </div> */}
+        </VStack>
       </TabsContent>
     </Tabs>
   );

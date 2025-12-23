@@ -24,19 +24,21 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import type { ModelKey } from "../side-navigation";
+// import type { ModelKey } from "../side-navigation";
 import { theme } from "../../../theme/theme";
 
 type Props = {
   onAddWorkspace?: (label: string) => void;
-  onModelChange?: (model: ModelKey) => void;
-  selectedModel?: ModelKey;
+  onModelChange?: (model: string) => void;
+  selectedModel?: string | undefined;
+  locations?: any[];
 };
 
 export default function SideNavHeading({
   onAddWorkspace,
   onModelChange,
   selectedModel,
+  locations,
 }: Props) {
   const [newLabel, setNewLabel] = useState("");
 
@@ -54,7 +56,7 @@ export default function SideNavHeading({
         <div className="w-full">
           <Select
             value={selectedModel}
-            onValueChange={(value) => onModelChange?.(value as ModelKey)}
+            onValueChange={(value) => onModelChange?.(value as string)}
           >
             <SelectTrigger
               className="w-full gap-2"
@@ -79,17 +81,24 @@ export default function SideNavHeading({
               }}
             >
               <SelectGroup className="flex flex-col gap-1">
-                <SelectItem value="orion-alpha-45">Orion-Alpha 4.5</SelectItem>
+                {locations?.map((location, index) => {
+                  return (
+                    <SelectItem key={index} value={location._id}>
+                      {location.name}
+                    </SelectItem>
+                  );
+                })}
+                {/* <SelectItem value="orion-alpha-45">Orion-Alpha 4.5</SelectItem>
                 <SelectItem value="orion-code-4">Orion-Code 4</SelectItem>
                 <SelectItem value="nova-chat-4">Nova-Chat 4</SelectItem>
-                <SelectItem value="galaxy-max-4">Galaxy-Max 4</SelectItem>
+                <SelectItem value="galaxy-max-4">Galaxy-Max 4</SelectItem> */}
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
 
         {/* RIGHT – ACTIONS */}
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <UserMenu />
 
           <AlertDialog>
@@ -156,7 +165,7 @@ export default function SideNavHeading({
               </div>
             </AlertDialogContent>
           </AlertDialog>
-        </div>
+        </div> */}
       </div>
     </header>
   );

@@ -16,7 +16,7 @@ interface StackProps extends HTMLAttributes<HTMLDivElement> {
 const HStackContainer = styled.div<StackProps>`
   display: flex;
   flex-direction: row;
-  align-items: ${({ align }) => align || "center"};
+  align-items: ${({ align }) => align || "unset"};
   justify-content: ${({ justify }) => justify || "flex-start"};
   gap: ${({ gap }) => (typeof gap === "number" ? `${gap}px` : gap || "8px")};
   width: ${({ width }) => width || "auto"};

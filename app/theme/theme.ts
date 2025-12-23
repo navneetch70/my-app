@@ -116,7 +116,7 @@ export const themes = {
 };
 
 /* 🔒 HARD-CODE APP THEME HERE */
-export const APP_THEME: ThemeMode = "dark"; // change to "dark" later
+export const APP_THEME: ThemeMode = "light"; // change to "dark" later
 
 export const theme = themes[APP_THEME];
 

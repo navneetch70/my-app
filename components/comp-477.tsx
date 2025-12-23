@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/TablePopup";
 import { useParams, useRouter } from "next/navigation";
 import { theme } from "@/app/theme/theme";
+import { getTasks } from "@/app/api/workspace.api";
 type Item = {
   id: string;
   name: string;
@@ -65,21 +66,26 @@ const STATUS_STYLE: Record<
   },
 };
 
-export default function TableComponent() {
+export default function TableComponent({
+  month,
+  locationId,
+  source,
+}: {
+  month: string;
+  locationId?: string;
+  source?: string;
+}) {
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const [data, setData] = useState<Item[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchPosts() {
-      const res = await fetch(
-        "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/users-01_fertyx.json"
-      );
-      const json = await res.json();
-      setData(json.slice(0, 5));
-    }
-    fetchPosts();
-  }, []);
+    getTasks(locationId || "", source || "", month).then((response) => {
+      setData(response.data);
+    });
+  }, [locationId, source, month]);
+
+  console.log("TABLE DATA ", data);
 
   const columns: ColumnDef<Item>[] = useMemo(
     () => [
@@ -123,16 +129,16 @@ export default function TableComponent() {
           </span>
         ),
       },
-      {
-        accessorKey: "location",
-        header: "Location",
-        cell: ({ row }) => (
-          <span style={{ color: theme.text.secondary }}>
-            <span className="mr-1">{row.original.flag}</span>
-            {row.getValue("location")}
-          </span>
-        ),
-      },
+      // {
+      //   accessorKey: "location",
+      //   header: "Location",
+      //   cell: ({ row }) => (
+      //     <span style={{ color: theme.text.secondary }}>
+      //       <span className="mr-1">{row.original.flag}</span>
+      //       {row.getValue("location")}
+      //     </span>
+      //   ),
+      // },
       {
         accessorKey: "status",
         header: "Status",

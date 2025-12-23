@@ -58,7 +58,7 @@ export default function Component() {
   return (
     <div
       style={{ width: "100%" }}
-      className="flex w-full flex-col gap-2 *:first:grow"
+      className="flex w-full flex-col gap-2 *:first:grow py-4"
     >
       <div style={{ width: "100%" }} className="w-full pt-4 px-4">
         <Tree

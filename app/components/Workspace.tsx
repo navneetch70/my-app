@@ -1,12 +1,13 @@
 // components/Workspace.tsx
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import VStack from "../Stack/VStack";
 import HStack from "../Stack/HStack";
 import BreadComponent from "@/components/comp-452";
 import NavComponent from "@/components/comp-581";
 import { theme } from "@/app/theme/theme";
+import { usePathname } from "next/navigation";
 
 type WorkspaceProps = {
   currentLabel: string;
@@ -14,7 +15,17 @@ type WorkspaceProps = {
   children: React.ReactNode;
 };
 
-export default function Workspace({ currentLabel, children }: WorkspaceProps) {
+export default function Workspace({
+  currentLabel,
+  activeWorkspaceId,
+  children,
+}: WorkspaceProps) {
+  const pathname = usePathname();
+
+  // ✅ Force a re-render when the workspace ID changes
+  useEffect(() => {
+    // This will trigger when workspace navigation occurs
+  }, [activeWorkspaceId, pathname]);
   return (
     <VStack
       height="100%"
@@ -24,6 +35,7 @@ export default function Workspace({ currentLabel, children }: WorkspaceProps) {
         backgroundColor: theme.page.bg,
         color: theme.text.primary,
       }}
+      width="100%"
     >
       {/* Header */}
       <HStack
@@ -50,7 +62,9 @@ export default function Workspace({ currentLabel, children }: WorkspaceProps) {
           padding: "12px",
         }}
       >
-        {children}
+        <div key={`workspace-content-${activeWorkspaceId || pathname}`}>
+          {children}
+        </div>
       </VStack>
     </VStack>
   );
